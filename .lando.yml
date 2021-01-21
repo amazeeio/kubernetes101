@@ -1,0 +1,6 @@
+name: kubernetes101
+recipe: lagoon
+config:
+  flavor: drupal
+  build:
+    - composer install

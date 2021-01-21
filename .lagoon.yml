@@ -3,17 +3,17 @@ docker-compose-yaml: docker-compose.yml
 project: kubernetes101
 
 tasks:
-#   pre-rollout:
-#     - run:
-#         name: drush sql-dump
-#         command: mkdir -p /app/web/sites/default/files/private/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/pre-deploy-dump.sql.gz || true
-#         service: cli
+  pre-rollout:
+    - run:
+        name: drush sql-dump
+        command: mkdir -p /app/web/sites/default/files/private/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/pre-deploy-dump.sql.gz || true
+        service: cli
 
   post-rollout:
     - run:
-        name: IF no Drupal installed and we are not main branch, sync from main brancy
+        name: IF no Drupal installed and we are not main branch, sync from main branch
         command: |
-          if tables=$(drush sqlq 'show tables;') && [ -z "$tables" ] && [[ "$LAGOON_GIT_BRANCH" != "main" ]]; then
+          if tables=$(drush sqlq "show tables like 'node';") && [ -z "$tables" ] && [[ "$LAGOON_GIT_BRANCH" != "main" ]]; then
               # no drupal installed, sync DB from main branch
               drush -y sql-sync @main @self
           fi
@@ -34,19 +34,7 @@ tasks:
 
 
 environments:
-  9.x:
-    routes:
-      - nginx:
-        - drupal9.amazee.io:
-            annotations:
-              nginx.ingress.kubernetes.io/server-snippet: |
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-BlackLivesMatter ⬛️⬛️⬛️⬛️⬛️⬛️;
-                add_header X-Drupal "#Drupal9 on Lagoon #CelebrateDrupal";
+  main:
     cronjobs:
       - name: drush cron
         schedule: "*/15 * * * *"

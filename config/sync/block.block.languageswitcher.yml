@@ -10,7 +10,7 @@ _core:
   default_config_hash: DqYisvDJbN_j5fWBCF6RVDYi5ZV62Yy8DABdtvRigME
 id: languageswitcher
 theme: umami
-region: pre_header
+region: bottom
 weight: 0
 provider: null
 plugin: 'language_block:language_interface'
